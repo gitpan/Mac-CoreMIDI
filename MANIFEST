@@ -1,0 +1,18 @@
+Changes
+MANIFEST
+README
+lib/Mac/CoreMIDI.pm
+lib/Mac/CoreMIDI/Object.pm
+lib/Mac/CoreMIDI/Device.pm
+lib/Mac/CoreMIDI/Entity.pm
+lib/Mac/CoreMIDI/Endpoint.pm
+helpers.c
+helpers.h
+CoreMIDI.xs
+typemap
+Makefile.PL
+ppport.h
+t/1-use.t
+demo/dump.pl
+demo/walk.pl
+META.yml                                 Module meta-data (added by MakeMaker)
