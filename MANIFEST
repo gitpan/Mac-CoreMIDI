@@ -6,6 +6,8 @@ lib/Mac/CoreMIDI/Object.pm
 lib/Mac/CoreMIDI/Device.pm
 lib/Mac/CoreMIDI/Entity.pm
 lib/Mac/CoreMIDI/Endpoint.pm
+lib/Mac/CoreMIDI/Client.pm
+lib/Mac/CoreMIDI/Port.pm
 helpers.c
 helpers.h
 CoreMIDI.xs
@@ -16,4 +18,7 @@ t/1-use.t
 t/2-find.t
 demo/dump.pl
 demo/walk.pl
+demo/client.pl
+demo/clport.pl
+demo/clds.pl
 META.yml                                 Module meta-data (added by MakeMaker)

@@ -8,7 +8,8 @@ WriteMakefile(
     ($] >= 5.005 ?     ## Add these new keywords supported since 5.005
       (ABSTRACT_FROM  => 'lib/Mac/CoreMIDI.pm', # retrieve abstract from module
        AUTHOR         => 'Christian Renz <crenz@web42.com>') : ()),
-    LDDLFLAGS         => '-bundle -flat_namespace -undefined suppress -framework CoreMIDI -framework CoreServices',
+#    LDDLFLAGS         => '-bundle -flat_namespace -undefined suppress -framework CoreMIDI -framework CoreServices',
+    LDDLFLAGS         => '-bundle -flat_namespace -undefined dynamic_lookup -framework CoreMIDI -framework CoreServices',
     LIBS              => [ ], # e.g., '-lm'
     DEFINE            => '', # e.g., '-DHAVE_SOMETHING'
     INC               => '-I.', # e.g., '-I. -I/usr/include/other'

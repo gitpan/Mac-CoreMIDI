@@ -1,4 +1,4 @@
-Mac/CoreMIDI version 0.02
+Mac/CoreMIDI version 0.03
 =========================
 
 With Mac OS X, Apple introduced a flexible MIDI system called CoreMIDI. C<Mac::CoreMIDI> translates the procedural CoreMIDI API into a set of OO Perl classes.

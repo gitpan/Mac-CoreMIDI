@@ -7,6 +7,8 @@ use warnings;
 use Mac::CoreMIDI::Device;
 use Mac::CoreMIDI::Entity;
 use Mac::CoreMIDI::Endpoint;
+use Mac::CoreMIDI::Client;
+use Mac::CoreMIDI::Port;
 
 require Exporter;
 
@@ -14,7 +16,7 @@ our @ISA = qw(Exporter);
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
     GetDevices
-	GetNumberOfDevices
+    GetNumberOfDevices
     GetDevice
     GetSources
     GetNumberOfSources
@@ -32,7 +34,7 @@ our %EXPORT_TAGS = ( 'all' => [ qw(
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub GetDevices {
     my $numDevices = GetNumberOfDevices();
@@ -43,14 +45,14 @@ sub GetDevices {
 
 sub GetSources {
     my $numSources = GetNumberOfSources();
-    my @sources = map { GetDevice($_) } 0..$numSources-1;
+    my @sources = map { GetSource($_) } 0..$numSources-1;
 
     return @sources;
 }
 
 sub GetDestinations {
     my $numDestinations = GetNumberOfDestinations();
-    my @destinations = map { GetDevice($_) } 0..$numDestinations-1;
+    my @destinations = map { GetDestination($_) } 0..$numDestinations-1;
 
     return @destinations;
 }
@@ -91,7 +93,9 @@ You will need the CoreAudio SDK installed to compile this module.
 
 CoreMIDI models MIDI devices that can have several entities. These entities have endpoints (sources and destinations). The classes are L<Mac::CoreMIDI::Device>, L<Mac::CoreMIDI::Entity> and L<Mac::CoreMIDI::Endpoint> (for both sources and destinations). The base class of most CoreMIDI classes is L<Mac::CoreMIDI::Object>.
 
-For now, only the functions that return information about the devices present have been implemented. The rest of the API will be implemented over time.
+=head1 CAVEAT
+
+This module is work in progress. So far, information about the MIDI system can be collected and update messages can be received. However, the structure is subject to change. I hope to use code ref-based callbacks soon, which will help to implement the callbacks to read MIDI data more easily.
 
 =head1 FUNCTIONS
 

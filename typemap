@@ -1,3 +1,6 @@
+const char *    T_PV
+
+
 // OSStatus is a SInt32 is a signed long;
 OSStatus    T_IV
 
@@ -10,6 +13,8 @@ Mac_CoreMIDI_Object   T_PTROBJ_SPECIAL
 Mac_CoreMIDI_Device   T_PTROBJ_SPECIAL
 Mac_CoreMIDI_Entity   T_PTROBJ_SPECIAL
 Mac_CoreMIDI_Endpoint T_PTROBJ_SPECIAL
+Mac_CoreMIDI_Client   T_PTROBJ_SPECIAL
+Mac_CoreMIDI_Port   T_PTROBJ_SPECIAL
 
 // from perlxstut
 

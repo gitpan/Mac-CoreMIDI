@@ -196,8 +196,9 @@ MIDIEntityGetDestination(entity, destIndex0)
     OUTPUT:
         RETVAL
 
+# ------------------------------------------------------------------------
 
-MODULE = Mac::CoreMIDI    PACKAGE = Mac::CoreMIDI::EndPoint   PREFIX=MIDIEndpoint
+MODULE = Mac::CoreMIDI    PACKAGE = Mac::CoreMIDI::Endpoint   PREFIX=MIDIEndpoint
 
 Mac_CoreMIDI_Entity
 MIDIEndpointGetParent(inEndpoint)
@@ -209,6 +210,133 @@ MIDIEndpointGetParent(inEndpoint)
         ST(0) = sv_setref_iv(sv_newmortal(),
             "Mac::CoreMIDI::Entity", (IV) entity);
 
+Mac_CoreMIDI_Endpoint
+MIDIEndpoint_new_destination(class, client, name)
+        const char *class
+        Mac_CoreMIDI_Client client;
+        const char *name
+    PREINIT:
+        CFStringRef str;
+        Mac_CoreMIDI_Endpoint me;
+        SV* sv;
+    CODE:
+        sv = newSViv(42); // allocate a SV to store the object ref in
+        str = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
+        OSStatus s = MIDIDestinationCreate(client, str, MIDIReader, (void *) sv, &me);
+        // Store me as a blessed reference in sv, so the callback can access it
+        sv_setref_pv(sv, class, (void *) me);
+        CFRelease(str);
+        RETVAL = me;
+    OUTPUT:
+        RETVAL
+
+Mac_CoreMIDI_Endpoint
+MIDIEndpoint_new_source(class, client, name)
+        const char *class
+        Mac_CoreMIDI_Client client;
+        const char *name
+    PREINIT:
+        CFStringRef str;
+        Mac_CoreMIDI_Endpoint me;
+        SV* sv;
+    CODE:
+        str = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
+        OSStatus s = MIDISourceCreate(client, str, &me);
+        CFRelease(str);
+        RETVAL = me;
+    OUTPUT:
+        RETVAL
+
+OSStatus
+MIDIEndpoint_destroy(endpoint)
+        Mac_CoreMIDI_Endpoint endpoint;
+    CODE:
+        RETVAL = MIDIEndpointDispose(endpoint);
+    OUTPUT:
+        RETVAL
+
+# ------------------------------------------------------------------------
+
+MODULE = Mac::CoreMIDI   PACKAGE = Mac::CoreMIDI::Client  PREFIX=MIDIClient
+
+Mac_CoreMIDI_Client
+MIDIClient_new(class, name)
+        const char *class
+        const char *name
+    PREINIT:
+        CFStringRef str;
+        Mac_CoreMIDI_Client mc;
+        SV* sv;
+    CODE:
+        sv = newSViv(42); // allocate a SV to store the object ref in
+        str = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
+        OSStatus s = MIDIClientCreate(str, MIDIClientNotify, (void *) sv, &mc);
+        // Store mc as a blessed reference in sv, so the callback can access it
+        sv_setref_pv(sv, class, (void *) mc);
+        CFRelease(str);
+        RETVAL = mc;
+    OUTPUT:
+        RETVAL
+
+OSStatus
+MIDIClient_destroy(client)
+        Mac_CoreMIDI_Client client;
+    CODE:
+        RETVAL = MIDIClientDispose(client);
+    OUTPUT:
+        RETVAL
+
+# ------------------------------------------------------------------------
+
+MODULE = Mac::CoreMIDI   PACKAGE = Mac::CoreMIDI::Port  PREFIX=MIDIPort
+
+Mac_CoreMIDI_Port
+MIDIPort_new_input(class, client, name)
+        const char *class
+        Mac_CoreMIDI_Client client;
+        const char *name
+    PREINIT:
+        CFStringRef str;
+        Mac_CoreMIDI_Port mp;
+        SV* sv;
+    CODE:
+        sv = newSViv(42); // allocate a SV to store the object ref in
+        str = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
+        OSStatus s = MIDIInputPortCreate(client, str, MIDIReader, (void *) sv, &mp);
+        // Store mc as a blessed reference in sv, so the callback can access it
+        sv_setref_pv(sv, class, (void *) mp);
+        CFRelease(str);
+        RETVAL = mp;
+    OUTPUT:
+        RETVAL
+
+Mac_CoreMIDI_Port
+MIDIPort_new_output(class, client, name)
+        const char *class
+        Mac_CoreMIDI_Client client;
+        const char *name
+    PREINIT:
+        CFStringRef str;
+        Mac_CoreMIDI_Port mp;
+        SV* sv;
+    CODE:
+        str = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
+        OSStatus s = MIDIOutputPortCreate(client, str, &mp);
+        // Store mc as a blessed reference in sv, so the callback can access it
+        CFRelease(str);
+        RETVAL = mp;
+    OUTPUT:
+        RETVAL
+
+OSStatus
+MIDIPort_destroy(port)
+        Mac_CoreMIDI_Port port;
+    CODE:
+        RETVAL = MIDIPortDispose(port);
+    OUTPUT:
+        RETVAL
+
+# ------------------------------------------------------------------------
 
 MODULE = Mac::CoreMIDI    PACKAGE = Mac::CoreMIDI      PREFIX=MIDI
 
@@ -298,3 +426,8 @@ OSStatus
 MIDIRestart()
     OUTPUT:
         RETVAL
+
+MODULE = Mac::CoreMIDI    PACKAGE = Mac::CoreMIDI      PREFIX=CF
+
+void
+CFRunLoopRun()

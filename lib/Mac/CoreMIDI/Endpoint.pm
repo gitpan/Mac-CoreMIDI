@@ -5,7 +5,39 @@ use strict;
 use warnings;
 
 use base qw(Mac::CoreMIDI::Object);
-our $VERSION = '0.02';
+our $VERSION = '0.03';
+
+sub new_destination {
+    my $class = shift;
+    my %args = @_;
+
+    return undef unless ref($args{client});
+    $args{name} ||= 'Mac::CoreMIDI::Endpoint (Destination)';
+
+    my $self = _new_destination($class, $args{client}, $args{name});
+
+    return $self;
+}
+
+sub new_source {
+    my $class = shift;
+    my %args = @_;
+
+    return undef unless ref($args{client});
+    $args{name} ||= 'Mac::CoreMIDI::Endpoint (Source)';
+
+    my $self = _new_source($class, $args{client}, $args{name});
+
+    return $self;
+}
+
+sub _DESTROY {
+    _destroy(shift);
+}
+
+sub Read {
+    # subclass to use this function
+}
 
 1;
 

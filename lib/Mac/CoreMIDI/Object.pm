@@ -13,9 +13,9 @@ sub Dump {
         $receiveCh, $transmitCh, $sysexspd, $schedule,
         $isembedded, $isbroadcast, $isrtent, $isoffline,
         $isprivate, $driverowner, $driverversion) = (
-        $self->GetName(),
-        $self->GetManufacturer(),
-        $self->GetModel(),
+        $self->GetName() || '',
+        $self->GetManufacturer() || '',
+        $self->GetModel() || '',
         $self->GetUniqueID(),
         $self->GetDeviceID(),
         $self->GetReceiveChannels(),
@@ -27,7 +27,7 @@ sub Dump {
         $self->IsSingleRealtimeEntity(),
         $self->IsOffline(),
         $self->IsPrivate(),
-        $self->GetDriverOwner(),
+        $self->GetDriverOwner() || '',
         $self->GetDriverVersion(),
     );
 
