@@ -4,17 +4,26 @@ use 5.006;
 use strict;
 use warnings;
 
-use Mac::CoreMIDI::Object;
-
-our $VERSION = '0.01';
-our @ISA = qw(Mac::CoreMIDI::Object);
+use base qw(Mac::CoreMIDI::Object);
+our $VERSION = '0.02';
 
 1;
+
 __END__
 
 =head1 NAME
 
-Mac::CoreMIDI::Endpoint - Encapsulate a CoreMIDI Endpoint
+Mac::CoreMIDI::Endpoint - Encapsulates a CoreMIDI Endpoint
+
+=head1 METHODS
+
+=over
+
+=item C<my $ent = $self-E<gt>GetParent()>
+
+Returns parent entity for this endpoint.
+
+=back
 
 =head1 SEE ALSO
 

@@ -13,6 +13,7 @@ typemap
 Makefile.PL
 ppport.h
 t/1-use.t
+t/2-find.t
 demo/dump.pl
 demo/walk.pl
 META.yml                                 Module meta-data (added by MakeMaker)

@@ -160,6 +160,16 @@ MIDIDeviceGetEntity(device, entityIndex0)
 
 MODULE = Mac::CoreMIDI    PACKAGE = Mac::CoreMIDI::Entity     PREFIX = MIDIEntity
 
+Mac_CoreMIDI_Device
+MIDIEntityGetParent(inEntity)
+        Mac_CoreMIDI_Entity  inEntity
+    PREINIT:
+        Mac_CoreMIDI_Device  device;
+    CODE:
+        OSStatus s = MIDIEntityGetDevice(inEntity, &device);
+        ST(0) = sv_setref_iv(sv_newmortal(),
+            "Mac::CoreMIDI::Device", (IV) device);
+
 ItemCount
 MIDIEntityGetNumberOfSources(entity)
         Mac_CoreMIDI_Entity  entity
@@ -185,6 +195,19 @@ MIDIEntityGetDestination(entity, destIndex0)
         ItemCount            destIndex0
     OUTPUT:
         RETVAL
+
+
+MODULE = Mac::CoreMIDI    PACKAGE = Mac::CoreMIDI::EndPoint   PREFIX=MIDIEndpoint
+
+Mac_CoreMIDI_Entity
+MIDIEndpointGetParent(inEndpoint)
+        Mac_CoreMIDI_Endpoint  inEndpoint
+    PREINIT:
+        Mac_CoreMIDI_Entity  entity;
+    CODE:
+        OSStatus s = MIDIEndpointGetEntity(inEndpoint, &entity);
+        ST(0) = sv_setref_iv(sv_newmortal(),
+            "Mac::CoreMIDI::Entity", (IV) entity);
 
 
 MODULE = Mac::CoreMIDI    PACKAGE = Mac::CoreMIDI      PREFIX=MIDI
@@ -232,6 +255,44 @@ MIDIGetExternalDevice(deviceIndex0)
         ItemCount  deviceIndex0
     OUTPUT:
         RETVAL
+
+SV *
+MIDIFindObject(uniqueID)
+        SInt32 uniqueID
+    PREINIT:
+        MIDIObjectRef object;
+        MIDIObjectType objectType;
+    CODE:
+        ST(0) = sv_newmortal();
+        
+        OSStatus s = MIDIObjectFindByUniqueID(uniqueID, &object, &objectType);
+        if (object == NULL) {
+            ST(0) = &PL_sv_undef;
+        } else {
+            # ExternalMask not removed here, in case of future differentiation
+            switch (objectType) {
+                case kMIDIObjectType_Device:
+                case kMIDIObjectType_ExternalDevice:
+                    ST(0) = sv_setref_iv(sv_newmortal(),
+                        "Mac::CoreMIDI::Device", (IV) object);
+                    break;
+                case kMIDIObjectType_Entity:
+                case kMIDIObjectType_ExternalEntity:
+                    ST(0) = sv_setref_iv(sv_newmortal(),
+                        "Mac::CoreMIDI::Entity", (IV) object);
+                    break;
+                case kMIDIObjectType_Source:
+                case kMIDIObjectType_ExternalSource:
+                case kMIDIObjectType_Destination:
+                case kMIDIObjectType_ExternalDestination:
+                    ST(0) = sv_setref_iv(sv_newmortal(),
+                        "Mac::CoreMIDI::Endpoint", (IV) object);
+                    break;
+                default:
+                    ST(0) = sv_setref_iv(sv_newmortal(),
+                        "Mac::CoreMIDI::Object", (IV) object);
+            }
+        }
 
 OSStatus
 MIDIRestart()

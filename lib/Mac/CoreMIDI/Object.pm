@@ -4,9 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
-
-1;
+our $VERSION = '0.02';
 
 sub Dump {
     my ($self) = @_;
@@ -55,6 +53,8 @@ $type
 EOT
 }
 
+1;
+
 __END__
 
 =head1 NAME
@@ -71,7 +71,7 @@ Mac::CoreMIDI::Object has a lot of properties that will be documented when the i
 
 =over
 
-=item L<$self->dump()>
+=item C<$self-E<gt>dump()>
 
 Prints a lot of information on the object.
 

@@ -25,13 +25,14 @@ our %EXPORT_TAGS = ( 'all' => [ qw(
     GetExternalDevices
     GetNumberOfExternalDevices
     GetExternalDevice
+    FindObject
     Restart
 ) ] 
 );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 sub GetDevices {
     my $numDevices = GetNumberOfDevices();
@@ -145,6 +146,10 @@ Returns the number of external MIDI devices.
 =item C<GetExternalDevice($i)>
 
 Returns the C<$i>'th external MIDI device (starting from 0).
+
+=item C<my $obj = FindObject($id)>
+
+Finds a MIDI object by its unique ID.
 
 =item C<Restart()>
 

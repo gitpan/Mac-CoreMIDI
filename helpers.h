@@ -12,8 +12,8 @@
 #undef I_POLL
 #undef DEBUG
 
-#include <CoreMIDI/MIDIServices.h>
-#include <CoreFoundation/CFRunLoop.h>
+#include <CoreMIDI/CoreMIDI.h>
+// #include <CoreFoundation/CFRunLoop.h>
 
 typedef MIDIObjectRef   Mac_CoreMIDI_Object;
 typedef MIDIDeviceRef   Mac_CoreMIDI_Device;

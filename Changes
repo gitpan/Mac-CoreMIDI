@@ -1,4 +1,9 @@
 Revision history for Perl extension Mac::CoreMIDI.
 
-0.01  2004-10-26
+0.02  2004-10-26
+    - Added GetParent methods
+    - Added FindObject
+    - Some documentation fixes
+
+0.01  2004-10-25
     - Initial release

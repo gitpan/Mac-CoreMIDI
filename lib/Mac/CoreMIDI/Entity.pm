@@ -4,10 +4,8 @@ use 5.006;
 use strict;
 use warnings;
 
-use Mac::CoreMIDI::Object;
-
-our $VERSION = '0.01';
-our @ISA = qw(Mac::CoreMIDI::Object);
+use base qw(Mac::CoreMIDI::Object);
+our $VERSION = '0.02';
 
 sub GetSources {
     my ($self) = @_;
@@ -28,37 +26,42 @@ sub GetDestinations {
 }
 
 1;
+
 __END__
 
 =head1 NAME
 
-Mac::CoreMIDI::Entity - Encapsulate a CoreMIDI Entity
+Mac::CoreMIDI::Entity - Encapsulates a CoreMIDI Entity
 
 =head1 METHODS
 
 =over
 
-=item C<my @src = $self->GetSources()>
+=item C<my $dev = $self-E<gt>GetParent()>
+
+Returns parent device for this entity.
+
+=item C<my @src = $self-E<gt>GetSources()>
 
 Returns a list of source endpoints for this entity.
 
-=item C<my $n = $self->GetNumberOfSources()>
+=item C<my $n = $self-E<gt>GetNumberOfSources()>
 
 Returns the number of sources.
 
-=item C<my $src = $self->GetSource($i)>
+=item C<my $src = $self-E<gt>GetSource($i)>
 
 Returns the C<$i>'th source (starting from 0).
 
-=item C<my @dest = $self->GetDestinations()>
+=item C<my @dest = $self-E<gt>GetDestinations()>
 
 Returns a list of destination endpoints for this entity.
 
-=item C<my $n = $self->GetNumberOfDestinations()>
+=item C<my $n = $self-E<gt>GetNumberOfDestinations()>
 
 Returns the number of destinations.
 
-=item C<my $dest = $self->GetDestination($i)>
+=item C<my $dest = $self-E<gt>GetDestination($i)>
 
 Returns the C<$i>'th destination (starting from 0).
 

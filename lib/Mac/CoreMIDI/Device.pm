@@ -4,10 +4,8 @@ use 5.006;
 use strict;
 use warnings;
 
-use Mac::CoreMIDI::Object;
-
-our $VERSION = '0.01';
-our @ISA = qw(Mac::CoreMIDI::Object);
+use base qw(Mac::CoreMIDI::Object);
+our $VERSION = '0.02';
 
 sub GetEntities {
     my ($self) = @_;
@@ -19,6 +17,7 @@ sub GetEntities {
 }
 
 1;
+
 __END__
 
 =head1 NAME
@@ -29,15 +28,15 @@ Mac::CoreMIDI::Device - Encapsulates a CoreMIDI Device
 
 =over
 
-=item C<my @ent = $self->GetEntities()>
+=item C<my @ent = $self-E<gt>GetEntities()>
 
 Returns a list of all entities for this device.
 
-=item C<my $n = $self->GetNumberOfEntities()>
+=item C<my $n = $self-E<gt>GetNumberOfEntities()>
 
 Returns the number of entities.
 
-=item C<my $dev = $self->GetEntity($i)>
+=item C<my $dev = $self-E<gt>GetEntity($i)>
 
 Returns the C<$i>'th entity (starting from 0).
 
