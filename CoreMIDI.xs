@@ -6,58 +6,43 @@ SV *
 MIDIGetName(dev)
         Mac_CoreMIDI_Object dev
     CODE:
-        RETVAL = MIDIGetStringProperty(dev, kMIDIPropertyName);
-    OUTPUT:
-        RETVAL
+        ST(0) = MIDIGetStringProperty(dev, kMIDIPropertyName);
 
 SV *
 MIDIGetManufacturer(dev)
         Mac_CoreMIDI_Object dev
     CODE:
-        RETVAL = MIDIGetStringProperty(dev, kMIDIPropertyManufacturer);
-    OUTPUT:
-        RETVAL
-
+        ST(0) = MIDIGetStringProperty(dev, kMIDIPropertyManufacturer);
 
 SV *
 MIDIGetModel(dev)
         Mac_CoreMIDI_Object dev
     CODE:
-        RETVAL = MIDIGetStringProperty(dev, kMIDIPropertyModel);
-    OUTPUT:
-        RETVAL
+        ST(0) = MIDIGetStringProperty(dev, kMIDIPropertyModel);
 
 SV*
 MIDIGetUniqueID(dev)
         Mac_CoreMIDI_Object dev
     CODE:
-        RETVAL = MIDIGetIntegerProperty(dev, kMIDIPropertyUniqueID);
-    OUTPUT:
-        RETVAL
+        ST(0) = MIDIGetIntegerProperty(dev, kMIDIPropertyUniqueID);
 
 SV*
 MIDIGetDeviceID(dev)
         Mac_CoreMIDI_Object dev
     CODE:
-        RETVAL = MIDIGetIntegerProperty(dev, kMIDIPropertyDeviceID);
-    OUTPUT:
-        RETVAL
+        ST(0) = MIDIGetIntegerProperty(dev, kMIDIPropertyDeviceID);
 
 SV*
 MIDIGetReceiveChannels(dev)
         Mac_CoreMIDI_Object dev
     CODE:
-        RETVAL = MIDIGetIntegerProperty(dev, kMIDIPropertyReceiveChannels);
-    OUTPUT:
-        RETVAL
+        ST(0) = MIDIGetIntegerProperty(dev, kMIDIPropertyReceiveChannels);
 
 SV*
 MIDIGetTransmitChannels(dev)
         Mac_CoreMIDI_Object dev
     CODE:
-        RETVAL = MIDIGetIntegerProperty(dev, kMIDIPropertyTransmitChannels);
-    OUTPUT:
-        RETVAL
+        ST(0) = MIDIGetIntegerProperty(dev, kMIDIPropertyTransmitChannels);
 
 SV*
 MIDIGetMaxSysExSpeed(dev)
@@ -211,26 +196,6 @@ MIDIEndpointGetParent(inEndpoint)
             "Mac::CoreMIDI::Entity", (IV) entity);
 
 Mac_CoreMIDI_Endpoint
-MIDIEndpoint_new_destination(class, client, name)
-        const char *class
-        Mac_CoreMIDI_Client client;
-        const char *name
-    PREINIT:
-        CFStringRef str;
-        Mac_CoreMIDI_Endpoint me;
-        SV* sv;
-    CODE:
-        sv = newSViv(42); // allocate a SV to store the object ref in
-        str = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
-        OSStatus s = MIDIDestinationCreate(client, str, MIDIReader, (void *) sv, &me);
-        // Store me as a blessed reference in sv, so the callback can access it
-        sv_setref_pv(sv, class, (void *) me);
-        CFRelease(str);
-        RETVAL = me;
-    OUTPUT:
-        RETVAL
-
-Mac_CoreMIDI_Endpoint
 MIDIEndpoint_new_source(class, client, name)
         const char *class
         Mac_CoreMIDI_Client client;
@@ -260,23 +225,28 @@ MIDIEndpoint_destroy(endpoint)
 MODULE = Mac::CoreMIDI   PACKAGE = Mac::CoreMIDI::Client  PREFIX=MIDIClient
 
 Mac_CoreMIDI_Client
-MIDIClient_new(class, name)
+MIDIClient_new(class, name, callback)
         const char *class
         const char *name
+        SV *callback
     PREINIT:
         CFStringRef str;
         Mac_CoreMIDI_Client mc;
         SV* sv;
     CODE:
-        sv = newSViv(42); // allocate a SV to store the object ref in
-        str = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
-        OSStatus s = MIDIClientCreate(str, MIDIClientNotify, (void *) sv, &mc);
-        // Store mc as a blessed reference in sv, so the callback can access it
-        sv_setref_pv(sv, class, (void *) mc);
+        str = CFStringCreateWithCString(NULL, name,
+            kCFStringEncodingUTF8);
+        OSStatus s;
+        if (!SvOK(callback)) {
+            s = MIDIClientCreate(str, NULL, NULL, &mc);
+        } else {
+            s = MIDIClientCreate(str, MIDIClientNotify,
+                (void *) newSVsv(callback), &mc);
+        }
         CFRelease(str);
-        RETVAL = mc;
-    OUTPUT:
-        RETVAL
+
+        ST(0) = sv_newmortal();
+        sv_setref_pv(ST(0), class, (void *) mc);
 
 OSStatus
 MIDIClient_destroy(client)
@@ -285,6 +255,37 @@ MIDIClient_destroy(client)
         RETVAL = MIDIClientDispose(client);
     OUTPUT:
         RETVAL
+
+Mac_CoreMIDI_Endpoint
+MIDIClientCreateDestination(client, name, callback)
+        Mac_CoreMIDI_Client client
+        const char *name
+        SV *callback
+    PREINIT:
+        CFStringRef str;
+        Mac_CoreMIDI_Endpoint me;
+    CODE:
+        str = CFStringCreateWithCString(NULL, name, kCFStringEncodingUTF8);
+        OSStatus s;
+        if (!SvOK(callback)) {
+            s = MIDIDestinationCreate(client, str, NULL, NULL, &me);
+        } else {
+//        
+//            dSP;
+//        
+//            PUSHMARK(SP);
+//            call_sv(callback, G_DISCARD | G_NOARGS);
+//
+
+            // sv will be garbage collected, so  we have to create a new
+            // SV that is still valid when the callback is called
+            s = MIDIDestinationCreate(client, str, MIDIReader,
+                (void *) newSVsv(callback), &me);
+        }
+        CFRelease(str);
+
+        ST(0) = sv_newmortal();
+        sv_setref_pv(ST(0), "Mac::CoreMIDI::Endpoint", (void *) me);
 
 # ------------------------------------------------------------------------
 
@@ -431,3 +432,50 @@ MODULE = Mac::CoreMIDI    PACKAGE = Mac::CoreMIDI      PREFIX=CF
 
 void
 CFRunLoopRun()
+
+MODULE = Mac::CoreMIDI    PACKAGE = Mac::CoreMIDI      PREFIX=CF_
+
+void
+CF_RunLoopStop()
+    PREINIT:
+        CFRunLoopRef rl;
+    CODE:
+        rl = CFRunLoopGetCurrent();
+        CFRunLoopStop(rl);
+        CFRelease(rl);
+
+MODULE = Mac::CoreMIDI    PACKAGE = Mac::CoreMIDI::ThruConnection  PREFIX=MIDIThruConnection
+
+SV *
+MIDIThruConnectionnew(class, fromEndpoint, toEndpoint)
+        const char *class
+        Mac_CoreMIDI_Endpoint fromEndpoint
+        Mac_CoreMIDI_Endpoint toEndpoint
+    PREINIT:
+        OSStatus err;
+        MIDIThruConnectionParams params;
+        CFDataRef dataRef;
+        MIDIThruConnectionRef thru;
+    CODE:
+        MIDIThruConnectionParamsInitialize(&params);
+        params.numSources = 1;
+        params.sources[0].endpointRef = fromEndpoint;
+        params.numDestinations = 1;
+        params.destinations[0].endpointRef = toEndpoint;
+        dataRef = CFDataCreate(NULL, (unsigned char*) &params,
+            sizeof(MIDIThruConnectionParams));
+        # name = persist ? CFSTR("com.apple.thrutest") : NULL
+        err = MIDIThruConnectionCreate(NULL, dataRef, &thru);
+        CFRelease(dataRef);
+        ST(0) = sv_newmortal();
+        if (err == 0) {
+            sv_setref_pv(ST(0), class, (void *) thru);
+        } else {
+            ST(0) = &PL_sv_undef;
+        }
+
+OSStatus
+MIDIThruConnectionDispose(connection)
+        Mac_CoreMIDI_ThruConnection connection
+    OUTPUT:
+        RETVAL

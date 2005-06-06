@@ -16,6 +16,8 @@ Makefile.PL
 ppport.h
 t/1-use.t
 t/2-find.t
+t/pod.t
+t/pod-coverage.t
 demo/dump.pl
 demo/walk.pl
 demo/client.pl

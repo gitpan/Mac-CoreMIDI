@@ -30,46 +30,55 @@ SV * MIDIGetIntegerProperty(Mac_CoreMIDI_Object dev, CFStringRef propname) {
 /* Callbacks ************************************************************/
 
 void MIDIClientNotify(const MIDINotification* message, void *refCon) {
-    if (!sv_isobject(refCon)) {
-        return;
-    }
     dSP;
 
-    ENTER;
-    SAVETMPS;
-
     PUSHMARK(SP);
-    XPUSHs((SV *) refCon);
-
-    PUTBACK;
-
-    call_method("Update", G_DISCARD);
-
-    FREETMPS;
-    LEAVE;
+    call_sv((SV *) refCon, G_DISCARD | G_NOARGS);
 }
 
 void MIDIReader(const MIDIPacketList * pktlist,
     void *readProcRefCon, void *srcConnRefCon) {
-    if (!sv_isobject(readProcRefCon)) {
-        return;
-    }
 
-    // read not yet implemented -- we are in a different thread!
-    return;
     dSP;
-
     ENTER;
     SAVETMPS;
-
+    
     PUSHMARK(SP);
 //    XPUSHs((SV *) readProcRefCon);
-
+//    call_pv("main::Read", G_DISCARD|G_NOARGS);
     PUTBACK;
-
-//    call_method("Read", G_DISCARD);
-//    call_pv("MyEndpoint::Read", G_DISCARD);
-
+    
     FREETMPS;
     LEAVE;
+
+//    dSP;
+//
+//    PUSHMARK(SP);
+//    call_sv((SV *) readProcRefCon, G_DISCARD | G_NOARGS);
+
+
+//    if (!sv_isobject(readProcRefCon)) {
+//        return;
+//    }
+//
+//    // read not yet implemented -- we are in a different thread!
+//    return;
+//    dSP;
+//
+//    ENTER;
+//    SAVETMPS;
+//
+//    PUSHMARK(SP);
+////    XPUSHs((SV *) readProcRefCon);
+//
+//    PUTBACK;
+//
+////    call_method("Read", G_DISCARD);
+////    call_pv("MyEndpoint::Read", G_DISCARD);
+//
+//    FREETMPS;
+//    LEAVE;
 }
+
+/* Thru-Connections *****************************************************/
+

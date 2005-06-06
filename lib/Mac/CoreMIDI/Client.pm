@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use base qw(Mac::CoreMIDI::Object);
-our $VERSION = '0.01';
+our $VERSION = '0.03';
 
 sub new {
     my $class = shift;
@@ -13,17 +13,13 @@ sub new {
 
     $args{name} ||= 'Mac::CoreMIDI::Client';
 
-    my $self = _new($class, $args{name});
+    my $self = _new($class, $args{name}, $args{callback});
 
     return $self;
 }
 
 sub _DESTROY {
     _destroy(shift);
-}
-
-sub Update {
-    # nothing happens here by default. Subclass to make something happen
 }
 
 1;
@@ -49,9 +45,23 @@ Mac::CoreMIDI::Client - Encapsulates a CoreMIDI Client
         # do something here
     }
 
+=head1 CONSTRUCTOR
+
+=over 4
+
+=item C<my $client = Mac::CoreMIDI::Client->new(name => '...')>
+
+Creates a new client object.
+
+=back
+
 =head1 METHODS
 
-=over
+=over 4
+
+=item C<$client-E<gt>CreateDestination($name, $callback)>
+
+Creates a destination object for this client.
 
 =item C<$self-E<gt>Update()>
 
@@ -65,11 +75,11 @@ L<Mac::CoreMIDI>
 
 =head1 AUTHOR
 
-Christian Renz, E<lt>crenz@web42.comE<gt>
+Christian Renz, E<lt>crenz @ web42.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Christian Renz
+Copyright 2004-2005 Christian Renz, E<lt>crenz @ web42.comE<gt>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

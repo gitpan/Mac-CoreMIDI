@@ -6,31 +6,36 @@ use warnings;
 
 use Mac::CoreMIDI;
 
-#my $c = Mac::CoreMIDI::Client->new(name => 'Perl');
-my $c = MyClient->new(name => 'Perl');
+my $c = Mac::CoreMIDI::Client->new(name => 'Perl');
 
-my $d = MyEndpoint->new_destination(
-    name => 'Perl destination', client => $c);
+$c->CreateDestination("Perl destination", \&Read);
 
-my $s = MyEndpoint->new_source(
-    name => 'Perl source', client => $c);
+# my $d = MyEndpoint->new_destination(
+#     name => 'Perl destination', client => $c);
+# 
+# my $s = MyEndpoint->new_source(
+#     name => 'Perl source', client => $c);
     
+
+sub Read {
+    print "Someone sent me some data: >@_<\n";
+}
 
 
 Mac::CoreMIDI::RunLoopRun();
-
-package MyEndpoint;
-
-use base qw(Mac::CoreMIDI::Endpoint);
-
-sub Read {
-    print "Someone sent me some data.\n";
-}
-
-package MyClient;
-
-use base qw(Mac::CoreMIDI::Client);
-
-sub Update {
-    print "MIDI system was updated.\n";
-}
+# 
+# package MyEndpoint;
+# 
+# use base qw(Mac::CoreMIDI::Endpoint);
+# 
+# sub Read {
+#     print "Someone sent me some data.\n";
+# }
+# 
+# package MyClient;
+# 
+# use base qw(Mac::CoreMIDI::Client);
+# 
+# sub Update {
+#     print "MIDI system was updated.\n";
+# }

@@ -4,7 +4,7 @@ use 5.006;
 use strict;
 use warnings;
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub Dump {
     my ($self) = @_;
@@ -67,13 +67,49 @@ Mac::CoreMIDI::Object is the base class for most other CoreMIDI objects.
 
 =head1 METHODS
 
-Mac::CoreMIDI::Object has a lot of properties that will be documented when the implementation is complete. For now, see the source.
+=over 4
 
-=over
+=item C<$self-E<gt>Dump()>
 
-=item C<$self-E<gt>dump()>
+Prints a lot of information about the object to STDOUT.
 
-Prints a lot of information on the object.
+=back
+
+=head1 READ-ONLY PROPERTIES
+
+=over 4
+
+=item C<GetAdvanceScheduleTimeMuSec>
+
+=item C<GetDeviceID>
+
+=item C<GetDriverOwner>
+
+=item C<GetDriverVersion>
+
+=item C<GetManufacturer>
+
+=item C<GetMaxSysExSpeed>
+
+=item C<GetModel>
+
+=item C<GetName>
+
+=item C<GetReceiveChannels>
+
+=item C<GetTransmitChannels>
+
+=item C<GetUniqueID>
+
+=item C<IsBroadcast>
+
+=item C<IsEmbeddedEntity>
+
+=item C<IsOffline>
+
+=item C<IsPrivate>
+
+=item C<IsSingleRealtimeEntity>
 
 =back
 
@@ -83,11 +119,11 @@ L<CoreMIDI>
 
 =head1 AUTHOR
 
-Christian Renz, E<lt>crenz@web42.comE<gt>
+Christian Renz, E<lt>crenz @ web42.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Christian Renz
+Copyright 2004-2005 Christian Renz, E<lt>crenz @ web42.comE<gt>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

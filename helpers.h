@@ -22,6 +22,8 @@ typedef MIDIEndpointRef Mac_CoreMIDI_Endpoint;
 typedef MIDIClientRef   Mac_CoreMIDI_Client;
 typedef MIDIPortRef     Mac_CoreMIDI_Port;
 
+typedef MIDIThruConnectionRef Mac_CoreMIDI_ThruConnection;
+
 SV * MIDIGetStringProperty(Mac_CoreMIDI_Object dev, CFStringRef propname);
 SV * MIDIGetIntegerProperty(Mac_CoreMIDI_Object dev, CFStringRef propname);
 

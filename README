@@ -1,5 +1,5 @@
-Mac/CoreMIDI version 0.03
-=========================
+Mac/CoreMIDI
+============
 
 With Mac OS X, Apple introduced a flexible MIDI system called CoreMIDI. C<Mac::CoreMIDI> translates the procedural CoreMIDI API into a set of OO Perl classes.
 
@@ -16,7 +16,7 @@ To install this module type the following:
 
 COPYRIGHT AND LICENCE
 
-Copyright (C) 2004 Christian Renz <crenz@web42.com>
+Copyright (C) 2004-2005 Christian Renz <crenz@web42.com>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

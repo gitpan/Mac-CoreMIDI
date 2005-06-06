@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 use base qw(Mac::CoreMIDI::Object);
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 sub GetSources {
     my ($self) = @_;
@@ -73,11 +73,11 @@ L<Mac::CoreMIDI>
 
 =head1 AUTHOR
 
-Christian Renz, E<lt>crenz@web42.comE<gt>
+Christian Renz, E<lt>crenz @ web42.comE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2004 by Christian Renz
+Copyright 2004-2005 Christian Renz, E<lt>crenz @ web42.comE<gt>
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

@@ -7,14 +7,11 @@ use warnings;
 use Mac::CoreMIDI;
 use Mac::CoreMIDI::Client;;
 
-#my $c = Mac::CoreMIDI::Client->new(name => 'Perl');
-my $c = MyClient->new(name => 'Perl');
+my $c = Mac::CoreMIDI::Client->new(name => 'Perl',
+    callback => \&Update);
+
 Mac::CoreMIDI::RunLoopRun();
 
-package MyClient;
-
-use base qw(Mac::CoreMIDI::Client);
-
 sub Update {
-    print "Harhar! I am the updater!\n";
+    print "MIDI system was updated!\n";
 }
